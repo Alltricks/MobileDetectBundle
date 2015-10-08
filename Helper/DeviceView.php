@@ -14,6 +14,7 @@ namespace SunCat\MobileDetectBundle\Helper;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use SunCat\MobileDetectBundle\Helper\RedirectResponseWithCookie;
 use SunCat\MobileDetectBundle\DeviceDetector\MobileDetector;
@@ -61,6 +62,10 @@ class DeviceView
         }
 
         $this->request = $serviceContainer->get('request');
+
+        if ($this->request instanceof RequestStack) {
+            $this->request = $this->request->getMasterRequest();
+        }
 
         if ($this->request->query->has(self::SWITCH_PARAM)) {
             $this->viewType = $this->request->query->get(self::SWITCH_PARAM);
